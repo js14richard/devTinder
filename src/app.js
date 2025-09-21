@@ -1,7 +1,29 @@
 const express = require('express');
+const {checkUserAuth, checkAdminAuth} = require('./middlewares/auth');
 const app = express();
 
-app.get("/users", (req, res)=> {
+// Auth middleware for admin routes
+app.use("/admin", checkAdminAuth, (req, res, next) => {
+    console.log("admin authenticated in router"); 
+    next();
+});
+
+// Auth middleware for user routes
+app.use("/user", checkUserAuth, (req, res, next) => {
+    console.log("user authenticated in router");
+    next();
+});
+
+
+app.get("/user/show_profiles", (req, res, next)=> {
+    res.send("Profile details").status(201);
+});
+
+app.get("/admin/dashboard", (req, res, next)=>{
+    res.send("Admin dashboard").status(200);
+});
+
+app.get("/user/list", (req, res)=> {
     res.send({
         name: 'Siril',
         age: 24,
