@@ -8,9 +8,28 @@ app.get("/users", (req, res)=> {
     });
 });
 
+// Route with single parameter
 app.get("/user/:id", (req, res) => {
     const userId = req.params.id;
-    res.send(`User ID: ${userId}`);
+    console.log(req.params);
+    res.send({
+        id: userId,
+        name: 'Siril',
+        age: 24,
+    });
+});
+
+// Route with multiple parameters
+app.get("/user/:id/:name/:age", (req, res) => {
+    const userId = req.params.id;
+    const userName = req.params.name;
+    const userAge = req.params.age;
+    console.log(req.params);
+    res.send({
+        id: userId,
+        name: userName,
+        age: userAge,
+    });
 });
 
 app.post("/users", (req, res) =>{
