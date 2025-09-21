@@ -65,8 +65,11 @@ app.use("/users", (req, res)=> {
 });
 
 // Add this route at the end to avoid overriding other routes as / matches all paths
-app.use("/", (req, res) => { 
-    res.send('Static route');
+// Error handling
+app.use("/", (err, req, res, next) => { 
+    if(err){
+        res.status(500).res.send("Internal server error");
+    }
 });
 
 app.listen(5000, () => {

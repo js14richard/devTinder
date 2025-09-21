@@ -3,6 +3,12 @@ const USER_TOKEN = "user123";
 
 function checkUserAuth(req, res, next){
     const token = extractAuthTokenFromHeader(req, res, next);
+
+    // skip the auth user/login endpoint
+    if (req.path === "/login"){
+        return next();
+    }
+
     if (token === USER_TOKEN){
         next();
     } else{
