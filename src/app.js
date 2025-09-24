@@ -4,17 +4,13 @@ const User = require("./models/user");
 
 app = express();
 
+// Middleware to parse JSON request bodies
+app.use(express.json());
 
+// Signup route 
 app.post("/signup", async (req, res)=> {
-
     try{
-        const newUser = {
-            firstName: "Siril",
-            lastName: "Richard", 
-            email:"siril@gmail.com", 
-            password: "mypassword",
-        };
-        const user = new User(newUser);
+        const user = new User(req.body);
         await user.save();
         res.status(201).send({message: "User signed up successfully"});
     } catch(err){
@@ -23,7 +19,50 @@ app.post("/signup", async (req, res)=> {
 });
 
 
+// Get user by email route
+app.get("/user", async (req, res)=>{
+    try{
+        const userEmail = req.body.email;
+        const user = await User.find({email: userEmail});
+        if (user.length === 0){
+            return res.status(404).send({message: "User not found"});
+        } else{
+            res.status(200).send(user[0]);
+        }
+    } catch(err){
+        res.status(500).send({message: "Error fetching user"});
+    }
+});
 
+// Get user by email route
+app.get("/users", async (req, res)=>{
+    try{
+        const user = await User.find();
+        if (user.length === 0){
+            return res.status(404).send({message: "No users found"});
+        } else{
+            res.status(200).send(user);
+        }
+    } catch(err){
+        res.status(500).send({message: "Error fetching user"});
+    }
+});
+
+// Delete user by
+app.delete("/user", async (req, res)=>{
+    try{
+        const userId = req.body.userId;
+        // findByIdAndDelete returns the delted document. If no document found, returns null
+        const deltedUser = await User.findByIdAndDelete(userId);
+        if (!deltedUser){
+            return res.status(404).send({message: "No user found to delete"});
+        } else{
+            res.status(200).send({message: "User deleted successfully"});
+        }  
+    } catch(err){
+        res.status(500).send({message: "Error deleting user"});
+    }
+}); 
 
 connectToMongoDB()
     .then(()=>{
