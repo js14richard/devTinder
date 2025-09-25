@@ -70,10 +70,14 @@ app.delete("/user", async (req, res)=>{
 app.patch("/user", async (req, res)=> {
     try{
         const userID = req.body.userId;
-        const updatedDetails = req.body;
-        await User.findByIdAndUpdate(userID, updatedDetails, {returnDocument:"after"}); // return the updated document
-        res.status(200).send({message: "User details updated successfully"});
-
+        const updateRequest = req.body;
+        const updatedUser = await User.findByIdAndUpdate(userID, updateRequest, {returnDocument:"before"}); // return the updated document
+        console.log(updatedUser);
+        if (updatedUser){
+            res.status(200).send({message: "User details updated successfully"});
+        } else{
+            res.status(404).send({message: "No user found to update"});
+        }
     } catch(err){
         res.status(500).send({message: "Error updating user"});
     }
