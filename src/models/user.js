@@ -37,6 +37,15 @@ const userSchema = new mongoose.Schema({
     age:{
         type:Number,
         min:[18, "Age must be at least 18"],
+    }, 
+    aobut:{
+        type:String,
+        maxlength:500,
+        default:"This is about me... added by default",
+    }, 
+    photoUrl:{
+        type:String,
+        default:"https://example.com/default-profile.png",
     }
 }, 
 {timestamps:true} // adds createdAt, updatedAt by default
