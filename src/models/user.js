@@ -51,6 +51,11 @@ const userSchema = new mongoose.Schema({
     photoUrl:{
         type:String,
         default:"https://example.com/default-profile.png",
+        validate(value){
+            if (!value.startsWith("http")){
+                throw new Error("Photo URL must start with http");
+            }
+        }
     }
 }, 
 {timestamps:true} // adds createdAt, updatedAt by default
@@ -58,4 +63,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+const ALLOWED_USER_FIELDS_FOR_UPDATE = ["password", "skills", "age", "about", "photoUrl"];
+
+module.exports = {User, ALLOWED_USER_FIELDS_FOR_UPDATE};
