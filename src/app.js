@@ -64,6 +64,21 @@ app.delete("/user", async (req, res)=>{
     }
 }); 
 
+
+// update any particular details of the user
+// Using patch here as we are updating only few details, if we use PUT it set null to the fields not provided in the request body
+app.patch("/user", async (req, res)=> {
+    try{
+        const userID = req.body.userId;
+        const updatedDetails = req.body;
+        await User.findByIdAndUpdate(userID, updatedDetails, {returnDocument:"after"}); // return the updated document
+        res.status(200).send({message: "User details updated successfully"});
+
+    } catch(err){
+        res.status(500).send({message: "Error updating user"});
+    }
+});
+
 connectToMongoDB()
     .then(()=>{
         console.log("Connected to MongoDB");
