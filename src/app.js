@@ -14,7 +14,7 @@ app.post("/signup", async (req, res)=> {
         await user.save();
         res.status(201).send({message: "User signed up successfully"});
     } catch(err){
-        res.status(500).send({message: "Error signing up user"});
+        res.status(500).send({message: "Error signing up user -> " + err.message});
     }
 });
 
@@ -79,7 +79,7 @@ app.patch("/user", async (req, res)=> {
             res.status(404).send({message: "No user found to update"});
         }
     } catch(err){
-        res.status(500).send({message: "Error updating user"});
+        res.status(500).send({message: "Error updating user -> " + err.message});
     }
 });
 

@@ -9,7 +9,12 @@ const userSchema = new mongoose.Schema({
     }, 
     lastName:{
         type:String,
-        maxlength:30,
+        validate:{ // this can be done with maxlength too, but here is an example of custom validator function
+            validator: function(value){
+                return value.length <= 10;
+            }, 
+            message: props => `${props.value} last name exceeds maximum length of 30 characters`
+        }
     },
     email:{
         type:String,
