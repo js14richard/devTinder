@@ -1,6 +1,6 @@
 
 const mongoose = require("mongoose");
-const clusterUrl = "mongodb+srv://js14richard_db_user:x7KcX2ZFPZf216cj@richitech.ref1hdl.mongodb.net/";
+const clusterUrl = "mongodb+srv://js14richard_db_user:x7KcX2ZFPZf216cj@richitech.ref1hdl.mongodb.net/devTinder";
 
 
 const connectToMongoDB = async ()=> {

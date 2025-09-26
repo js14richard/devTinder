@@ -18,6 +18,11 @@ app.post("/signup", async (req, res)=> {
     
         const {firstName, lastName, email, password, age, photoUrl, gender, skills, about} = req.body;
 
+        const isExistingUser = await User.findOne({email:email});
+        if (isExistingUser){
+            res.status(400).send({message:"User already exists"});
+        }
+
         const passwordHash = await bcrypt.hash(password, 10);
 
         const user = new User({
@@ -36,6 +41,35 @@ app.post("/signup", async (req, res)=> {
         res.status(201).send({message: "User signed up successfully"});
     } catch(err){
         res.status(500).send({message: "Error signing up user -> " + err.message});
+    }
+});
+
+
+// Login route
+app.post("/login", async (req, res) => {
+
+    try{
+        const {email, password} = req.body;
+
+        if (!email || !password){
+            res.status(400).send({message:"Bad request"});
+        }
+
+        // .select("+password") is need to here to fetch the password. As we restricted password in schema
+        const user = await User.findOne({email:email}).select("+password"); 
+        if (!user){
+            res.status(401).send({message:"Invalid credentials"});
+        }
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        console.log(isPasswordMatch);
+        if (!isPasswordMatch){
+            res.status(401).send({message:"Invalid credentials"});
+        }
+
+        return res.status(200).send({message:"Login successfull"});
+
+    } catch (err){
+        res.status(500).send({message:"Something went wrong" + err});
     }
 });
 
