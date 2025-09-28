@@ -70,10 +70,10 @@ app.post("/login", async (req, res) => {
         if (!user){
             res.status(401).send({message:"Invalid credentials"});
         }
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        const isPasswordMatch = await user.isPasswordMatch(password);
         
         if (isPasswordMatch){
-            const jwtToken = jwt.sign({userId: user._id}, JWT_SECRET_KEY, {expiresIn:"10h"});
+            const jwtToken = await user.getJWT();
             /**
                 res.cookie("token", jwtToken, {
                     httpOnly: true,      // JS code cannot read the cookie value in browser -> It is a best practise 
@@ -87,7 +87,7 @@ app.post("/login", async (req, res) => {
             res.status(401).send({message:"Invalid credentials"});
         }
     } catch (err){
-        res.status(500).send({message:"Something went wrong" + err});
+        res.status(500).send({message:"Something went wrong " + err});
     }
 });
 

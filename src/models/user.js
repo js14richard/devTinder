@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const JWT_SECRET_KEY = "devTinder_2%25";
 
 const userSchema = new mongoose.Schema({
     firstName:{
@@ -60,6 +63,26 @@ const userSchema = new mongoose.Schema({
 }, 
 {timestamps:true} // adds createdAt, updatedAt by default
 );
+
+// adding a instance methods for better readability
+// we can't use arrow function as we won't be able to access properties using this._id etc..
+userSchema.methods.getJWT = async function(){
+    try{
+        return jwt.sign({userId: this._id}, JWT_SECRET_KEY, {expiresIn:"10h"});
+    } catch(err){
+        throw err;
+    }
+}
+
+userSchema.methods.isPasswordMatch = async function(userInputPassword){
+    try{
+        return await bcrypt.compare(userInputPassword, this.password);
+    } catch(err){
+        throw err;
+    }
+}
+
+
 
 const User = mongoose.model("User", userSchema);
 
