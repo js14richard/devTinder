@@ -3,11 +3,18 @@ const connectToMongoDB = require("./config/database");
 const {User, ALLOWED_USER_FIELDS_FOR_UPDATE} = require("./models/user");
 const {validateSignupData} = require("./utils/validations");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 app = express();
 
+const JWT_SECRET_KEY = "devTinder_2%25";
+
 // Middleware to parse JSON request bodies
 app.use(express.json());
+
+// This must be added then only cookies can be read from the API request
+app.use(cookieParser());
 
 // Signup route 
 app.post("/signup", async (req, res)=> {
@@ -61,13 +68,20 @@ app.post("/login", async (req, res) => {
             res.status(401).send({message:"Invalid credentials"});
         }
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-        console.log(isPasswordMatch);
-        if (!isPasswordMatch){
+        
+        if (isPasswordMatch){
+            const jwtToken = jwt.sign({userId: user._id}, JWT_SECRET_KEY);
+            /**
+                res.cookie("token", jwtToken, {
+                    httpOnly: true,      // JS code cannot read the cookie value in browser -> It is a best practise 
+                    secure: true,        // HTTPS only
+                    sameSite: "Strict"   // Mitigate CSRF
+                });
+            **/
+            res.status(200).cookie("jwtToken", jwtToken, {httpOnly: true}).send({message:"Login successfull"});
+        } else{
             res.status(401).send({message:"Invalid credentials"});
         }
-
-        return res.status(200).send({message:"Login successfull"});
-
     } catch (err){
         res.status(500).send({message:"Something went wrong" + err});
     }
@@ -134,7 +148,7 @@ app.patch("/user/:userId", async (req, res)=> {
             throw new Error("Update action is restricted for: " + inValidUpdateRequestFields.join(", "));
         }
 
-        const updatedUser = await User.findByIdAndUpdate(userID, updateRequest, {returnDocument:"before", runValidators:true}); // return the updated document
+        const updatedUser = await User.findByIdAndUpdate(userID, updateRequest, {returnDocument:"after", runValidators:true}); // return the updated document
         if (updatedUser){
             res.status(200).send({message: "User details updated successfully"});
         } else{
@@ -144,6 +158,61 @@ app.patch("/user/:userId", async (req, res)=> {
         res.status(500).send({message: "Error updating user -> " + err.message});
     }
 });
+
+
+// GET : Profile route
+
+app.get("/profile", async (req, res) => {
+  try {
+    const { jwtToken } = req.cookies;
+
+    if (!jwtToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Authentication required. Please log in to access your profile."
+      });
+    }
+
+    let decodedJwt;
+    try {
+      decodedJwt = jwt.verify(jwtToken, JWT_SECRET_KEY);
+    } catch (err) {
+      return res.status(403).json({
+        success: false,
+        message: "Invalid or expired session. Please log in again."
+      });
+    }
+
+    const user = await User.findById(decodedJwt.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User profile not found. The account may no longer exist."
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile fetched successfully.",
+      data: user
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    });
+  }
+});
+
+
+
+
+
+
+
+
 
 connectToMongoDB()
     .then(()=>{
