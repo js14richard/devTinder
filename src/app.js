@@ -73,7 +73,7 @@ app.post("/login", async (req, res) => {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         
         if (isPasswordMatch){
-            const jwtToken = jwt.sign({userId: user._id}, JWT_SECRET_KEY, {expiresIn:"5s"});
+            const jwtToken = jwt.sign({userId: user._id}, JWT_SECRET_KEY, {expiresIn:"10h"});
             /**
                 res.cookie("token", jwtToken, {
                     httpOnly: true,      // JS code cannot read the cookie value in browser -> It is a best practise 
