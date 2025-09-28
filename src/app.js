@@ -2,6 +2,9 @@ const express = require("express");
 const connectToMongoDB = require("./config/database");
 const {User, ALLOWED_USER_FIELDS_FOR_UPDATE} = require("./models/user");
 const {validateSignupData} = require("./utils/validations");
+const {userAuth} = require("./middlewares/auth");
+
+
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
@@ -70,15 +73,16 @@ app.post("/login", async (req, res) => {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         
         if (isPasswordMatch){
-            const jwtToken = jwt.sign({userId: user._id}, JWT_SECRET_KEY);
+            const jwtToken = jwt.sign({userId: user._id}, JWT_SECRET_KEY, {expiresIn:"5s"});
             /**
                 res.cookie("token", jwtToken, {
                     httpOnly: true,      // JS code cannot read the cookie value in browser -> It is a best practise 
                     secure: true,        // HTTPS only
                     sameSite: "Strict"   // Mitigate CSRF
+                    maxAge: 10 * 60 * 60 * 1000 // cookie expires after 10 hours.
                 });
             **/
-            res.status(200).cookie("jwtToken", jwtToken, {httpOnly: true}).send({message:"Login successfull"});
+            res.status(200).cookie("jwtToken", jwtToken, {httpOnly: true, maxAge:10 * 60 * 60 * 1000}).send({message:"Login successfull"});
         } else{
             res.status(401).send({message:"Invalid credentials"});
         }
@@ -89,7 +93,7 @@ app.post("/login", async (req, res) => {
 
 
 // Get user by email route
-app.get("/user", async (req, res)=>{
+app.get("/user", userAuth,  async (req, res, next)=>{
     try{
         const userEmail = req.body.email;
         const user = await User.find({email: userEmail});
@@ -104,7 +108,7 @@ app.get("/user", async (req, res)=>{
 });
 
 // Get user by email route
-app.get("/users", async (req, res)=>{
+app.get("/users", userAuth, async (req, res, next)=>{
     try{
         const user = await User.find();
         if (user.length === 0){
@@ -118,7 +122,7 @@ app.get("/users", async (req, res)=>{
 });
 
 // Delete user by
-app.delete("/user", async (req, res)=>{
+app.delete("/user", userAuth, async (req, res)=>{
     try{
         const userId = req.body.userId;
         // findByIdAndDelete returns the delted document. If no document found, returns null
@@ -136,7 +140,7 @@ app.delete("/user", async (req, res)=>{
 
 // update any particular details of the user
 // Using patch here as we are updating only few details, if we use PUT it set null to the fields not provided in the request body
-app.patch("/user/:userId", async (req, res)=> {
+app.patch("/user/:userId", userAuth, async (req, res)=> {
     try{
         const userID = req.params.userId;
         const updateRequest = req.body;
@@ -162,28 +166,11 @@ app.patch("/user/:userId", async (req, res)=> {
 
 // GET : Profile route
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth, async (req, res) => {
   try {
-    const { jwtToken } = req.cookies;
-
-    if (!jwtToken) {
-      return res.status(401).json({
-        success: false,
-        message: "Authentication required. Please log in to access your profile."
-      });
-    }
-
-    let decodedJwt;
-    try {
-      decodedJwt = jwt.verify(jwtToken, JWT_SECRET_KEY);
-    } catch (err) {
-      return res.status(403).json({
-        success: false,
-        message: "Invalid or expired session. Please log in again."
-      });
-    }
-
-    const user = await User.findById(decodedJwt.userId);
+    
+    // currentUser was appended in req by auth middleware
+    const user = await User.findById(req.currentUser._id);
 
     if (!user) {
       return res.status(404).json({
@@ -206,6 +193,19 @@ app.get("/profile", async (req, res) => {
   }
 });
 
+
+
+// Connection request route
+app.post("/sendConnectionRequest", userAuth, async(req, res)=> {
+    try{
+        const userName = req.currentUser.firstName;
+        res.send({message:`${userName} sent a connection request`});
+
+    } catch(err){
+        console.error(`sendConnectionRequest failed : ${err.message}`);
+        res.status(500).message({message:"Something went wrong"});
+    }
+});
 
 
 
