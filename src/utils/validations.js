@@ -6,7 +6,7 @@ const validateSignupData = (req) => {
         throw new Error("First name must be between 2 and 30 characters");
     }
 
-    if (!email || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)){
+    if (!email || !/^[\w.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)){
         throw new Error("Invalid email format");
     }
 

@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
         unique:true,
         lowercase:true,
         trim:true, // remove whitespace
-        match:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, // regex for email validation
+        match:/^[\w.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, // regex for email validation
     },
     password:{
         type:String,
@@ -67,19 +67,11 @@ const userSchema = new mongoose.Schema({
 // adding a instance methods for better readability
 // we can't use arrow function as we won't be able to access properties using this._id etc..
 userSchema.methods.getJWT = async function(){
-    try{
-        return jwt.sign({userId: this._id}, JWT_SECRET_KEY, {expiresIn:"10h"});
-    } catch(err){
-        throw err;
-    }
+    return jwt.sign({userId: this._id}, JWT_SECRET_KEY, {expiresIn:"10h"});
 }
 
 userSchema.methods.isPasswordMatch = async function(userInputPassword){
-    try{
-        return await bcrypt.compare(userInputPassword, this.password);
-    } catch(err){
-        throw err;
-    }
+    return await bcrypt.compare(userInputPassword, this.password);
 }
 
 
