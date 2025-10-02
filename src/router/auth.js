@@ -4,9 +4,7 @@ const authRouter = express.Router();
 const bcrypt = require("bcrypt");
 
 const {validateSignupData} = require("../utils/validations");
-const {User, ALLOWED_USER_FIELDS_FOR_UPDATE} = require("../models/user");
-
-const {userAuth} = require("../middlewares/auth");
+const {User} = require("../models/user");
 
 
 authRouter.post("/signup", async (req, res)=> {
@@ -71,7 +69,12 @@ authRouter.post("/login", async (req, res) => {
                     maxAge: 10 * 60 * 60 * 1000 // cookie expires after 10 hours.
                 });
             **/
-            res.status(200).cookie("jwtToken", jwtToken, {httpOnly: true, maxAge:10 * 60 * 60 * 1000}).send({message:"Login successfull"});
+            res.status(200)
+                .cookie("jwtToken", jwtToken, {
+                    httpOnly: true, 
+                    maxAge:10 * 60 * 60 * 1000
+                })
+                .send({message:"Login successfull"});
         } else{
             res.status(401).send({message:"Invalid credentials"});
         }
@@ -79,6 +82,14 @@ authRouter.post("/login", async (req, res) => {
         res.status(500).send({message:"Something went wrong " + err});
     }
 });
+
+
+// Logout Route
+
+authRouter.post("/logout", (req, res) => {
+    res.clearCookie("jwtToken", null, {httpOnly: true}); // clearCookie is a helper provided by express to clear the cookie.
+    res.json({message:"Logout sucessfull"});
+})
 
 
 module.exports = authRouter;

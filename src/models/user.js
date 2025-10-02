@@ -78,6 +78,4 @@ userSchema.methods.isPasswordMatch = async function(userInputPassword){
 
 const User = mongoose.model("User", userSchema);
 
-const ALLOWED_USER_FIELDS_FOR_UPDATE = ["password", "skills", "age", "about", "photoUrl"];
-
-module.exports = {User, ALLOWED_USER_FIELDS_FOR_UPDATE};
+module.exports = {User};

@@ -1,4 +1,6 @@
 
+const ALLOWED_USER_FIELDS_FOR_UPDATE = ["firstName", "lastName", "skills", "age", "about", "photoUrl"];
+
 const validateSignupData = (req) => {
     const {firstName, email, password} = req.body;
 
@@ -16,4 +18,9 @@ const validateSignupData = (req) => {
     
 }
 
-module.exports = {validateSignupData};
+const isValidProfileUpdateRequest = (req) => {
+    return Object.keys(req.body).every((key)=>ALLOWED_USER_FIELDS_FOR_UPDATE.includes(key));
+}
+
+
+module.exports = {validateSignupData, isValidProfileUpdateRequest};
