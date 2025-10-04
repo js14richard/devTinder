@@ -49,7 +49,8 @@ userRouter.get("/user/connections", userAuth, async (req, res)=>{
                 {connectionSenderId : loggedInUserId, connectionRequestStatus: "accepted"}, 
                 {connectionReceiverId : loggedInUserId, connectionRequestStatus: "accepted"}
             ]
-        }).populate("connectionSenderId", ALLOWED_CONNECTION_FIELDS_TO_DISPLAY)
+        })
+        .populate("connectionSenderId", ALLOWED_CONNECTION_FIELDS_TO_DISPLAY)
         .populate("connectionReceiverId", ALLOWED_CONNECTION_FIELDS_TO_DISPLAY);
 
         // now userConnections will ALLOWED_CONNECTION_FIELDS_TO_DISPLAY the fields for both sender and receiver
@@ -58,24 +59,24 @@ userRouter.get("/user/connections", userAuth, async (req, res)=>{
         // If someone else sent the request to user we need to display Sender details
         
         const connectionDataToDisplay = userConnections.map((row)=>{
-            if(loggedInUserId.equals(userConnections.connectionSenderId._id)){
+            if(loggedInUserId.equals(row.connectionSenderId._id)){
                 return row.connectionReceiverId
             } else{
                 return row.connectionSenderId
             }
-        })
+        });
 
         if(!userConnections.length){
             return res.status(404)
                 .json({
                     message: "User has no connections"
                 })
-        }
+        };
 
         return res.json({
             message: "Fetched user connections sucessfully",
             data: connectionDataToDisplay
-        })
+        });
 
 
 
