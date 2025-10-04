@@ -10,6 +10,7 @@ const app = express();
 const authRouter = require("./router/auth");
 const profileRouter = require("./router/profile");
 const connectionRouter = require("./router/connection");
+const userRouter = require("./router/user");
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", connectionRouter);
+app.use("/", userRouter);
 
 
 

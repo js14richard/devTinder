@@ -93,22 +93,17 @@ connectionRouter.post("/request/review/:status/:requestId", userAuth, async (req
             _id : requestId,
             connectionRequestStatus : "interested", // Users can either accept or rejected only when someone intersed them
             connectionReceiverId : req.currentUser._id // This ensures user takes action only to the request which was sent by others to him
-        })
+        }).populate("connectionSenderId", ["firstName"]);
 
         if(!connectionData){
             return res.status(404) 
                 .json({message: "Connection request not found"});
         }
 
-        const connectionSenderId = connectionData.connectionSenderId;
-        const connectionSenderData = await User.findById(connectionSenderId);
-
         if(!connectionSenderData){
             return res.status(404)
                 .json({message:"Invalid connection sender"});
         }
-
-        const connectionSenderName = connectionSenderData.firstName;
 
         connectionData.connectionRequestStatus = status;
 
@@ -117,7 +112,7 @@ connectionRouter.post("/request/review/:status/:requestId", userAuth, async (req
         if(updatedConnectionData){
             return res.status(200)
                 .json({
-                    message:`${req.currentUser.firstName} has ${status} ${connectionSenderName}'s connection request`, 
+                    message:`${req.currentUser.firstName} has ${status} ${connectionData.connectionSenderId.firstName}'s connection request`, 
                     data: updatedConnectionData
                 });
         } else{

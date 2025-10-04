@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
         type:Number,
         min:[18, "Age must be at least 18"],
     }, 
-    aobut:{
+    about:{
         type:String,
         maxlength:500,
         default:"This is about me... added by default",
