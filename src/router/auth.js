@@ -12,7 +12,6 @@ authRouter.post("/signup", async (req, res)=> {
         // validate the request body
         validateSignupData(req);
 
-    
         const {firstName, lastName, email, password, age, photoUrl, gender, skills, about} = req.body;
 
         const isExistingUser = await User.findOne({email:email});
@@ -35,9 +34,9 @@ authRouter.post("/signup", async (req, res)=> {
         });
 
         await user.save();
-        res.status(201).send({message: "User signed up successfully"});
+        return res.status(201).send({message: "User signed up successfully"});
     } catch(err){
-        res.status(500).send({message: "Error signing up user -> " + err.message});
+        return res.status(500).send({message: "Error signing up user -> " + err.message});
     }
 });
 
@@ -55,7 +54,7 @@ authRouter.post("/login", async (req, res) => {
         // .select("+password") is need to here to fetch the password. As we restricted password in schema
         const user = await User.findOne({email:email}).select("+password"); 
         if (!user){
-            res.status(401).send({message:"Invalid credentials"});
+            return res.status(401).send({message:"Invalid credentials"});
         }
         const isPasswordMatch = await user.isPasswordMatch(password);
         
@@ -69,17 +68,17 @@ authRouter.post("/login", async (req, res) => {
                     maxAge: 10 * 60 * 60 * 1000 // cookie expires after 10 hours.
                 });
             **/
-            res.status(200)
+            return res.status(200)
                 .cookie("jwtToken", jwtToken, {
                     httpOnly: true, 
                     maxAge:10 * 60 * 60 * 1000
                 })
                 .send({message:"Login successfull"});
         } else{
-            res.status(401).send({message:"Invalid credentials"});
+           return  res.status(401).send({message:"Invalid credentials"});
         }
     } catch (err){
-        res.status(500).send({message:"Something went wrong " + err});
+        return res.status(500).send({message:"Something went wrong " + err});
     }
 });
 
@@ -87,8 +86,8 @@ authRouter.post("/login", async (req, res) => {
 // Logout Route
 
 authRouter.post("/logout", (req, res) => {
-    res.clearCookie("jwtToken", null, {httpOnly: true}); // clearCookie is a helper provided by express to clear the cookie.
-    res.json({message:"Logout sucessfull"});
+    return res.clearCookie("jwtToken", null, {httpOnly: true}) // clearCookie is a helper provided by express to clear the cookie.
+        .json({message:"Logout sucessfull"});
 })
 
 
