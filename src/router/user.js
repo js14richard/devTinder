@@ -101,19 +101,27 @@ userRouter.get("/user/connections", userAuth, async (req, res)=>{
 
 userRouter.get("/feed", userAuth, async (req, res)=> {
     try{
-        const loggedInUser = req.currentUser._id;
+        const loggedInUserId = req.currentUser._id;
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 50;
+        limit = limit > 50 ? 50 : limit;
+
+        // Calculate how many documents to skip for pagination
+        // Example: page 1 => skip 0, page 2 => (2-1)*50 so skip first 50 to display in the second page
+        const skip = (page-1)*limit; 
+            
 
         const connectionRequests = await ConnectionRequest.find({
             $or:[
-                {connectionSenderId : loggedInUser._id}, 
-                {connectionReceiverId: loggedInUser._id}
+                {connectionSenderId : loggedInUserId}, 
+                {connectionReceiverId: loggedInUserId}
             ]
         }).select("connectionSenderId connectionReceiverId");
 
         // connectionRequests have duplciates as the current user will be receiver for many requests 
         // We need to remove the data and just have unique 
         const hideUsersFromFeed = new Set(); // set to prevent duplicates
-        hideUsersFromFeed.add(loggedInUser._id.toString());
+        hideUsersFromFeed.add(loggedInUserId.toString());
 
         connectionRequests.forEach((request)=>{
             hideUsersFromFeed.add(request.connectionSenderId.toString());
@@ -123,7 +131,7 @@ userRouter.get("/feed", userAuth, async (req, res)=> {
         // only finding the users who don't have existing connection or request
         const finalFeed = await User.find({
             _id : {$nin : Array.from(hideUsersFromFeed)}
-        });
+        }).skip(skip).limit(limit);
 
         return res.json({
             message:"Fetched user feed succesfully",
@@ -133,9 +141,9 @@ userRouter.get("/feed", userAuth, async (req, res)=> {
     } catch(err){
         console.error(err.stack);
         return res.status(500)
-            .json("Error fetching feed")
+            .json({message:"Error fetching feed"})
     }
-})
+});
 
 
 module.exports = userRouter;
