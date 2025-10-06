@@ -4,6 +4,8 @@ const {userAuth} = require("../middlewares/auth");
 
 const {ConnectionRequest} = require("../models/connectionRequest");
 
+const {User} = require("../models/user");
+
 const ALLOWED_CONNECTION_FIELDS_TO_DISPLAY = ["firstName", "lastName", "skills", "gender", "about", "age", "photoUrl"];
 
 userRouter.get("/user/requests/received", userAuth, async (req, res)=> {
@@ -86,6 +88,52 @@ userRouter.get("/user/connections", userAuth, async (req, res)=>{
             .json({
                 message:"Error while fetching user connections"
             })
+    }
+})
+
+// Feed route
+
+/**
+ * A User should not see himself in the feed
+ * User should not see his connections in the feed
+ * User should not see if there is a connection request [either user sent or sent to the user]
+*/
+
+userRouter.get("/feed", userAuth, async (req, res)=> {
+    try{
+        const loggedInUser = req.currentUser._id;
+
+        const connectionRequests = await ConnectionRequest.find({
+            $or:[
+                {connectionSenderId : loggedInUser._id}, 
+                {connectionReceiverId: loggedInUser._id}
+            ]
+        }).select("connectionSenderId connectionReceiverId");
+
+        // connectionRequests have duplciates as the current user will be receiver for many requests 
+        // We need to remove the data and just have unique 
+        const hideUsersFromFeed = new Set(); // set to prevent duplicates
+        hideUsersFromFeed.add(loggedInUser._id.toString());
+
+        connectionRequests.forEach((request)=>{
+            hideUsersFromFeed.add(request.connectionSenderId.toString());
+            hideUsersFromFeed.add(request.connectionReceiverId.toString());
+        });
+
+        // only finding the users who don't have existing connection or request
+        const finalFeed = await User.find({
+            _id : {$nin : Array.from(hideUsersFromFeed)}
+        });
+
+        return res.json({
+            message:"Fetched user feed succesfully",
+            data: finalFeed
+        })
+
+    } catch(err){
+        console.error(err.stack);
+        return res.status(500)
+            .json("Error fetching feed")
     }
 })
 
