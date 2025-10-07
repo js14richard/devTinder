@@ -67,7 +67,7 @@ connectionRouter.post("/send/request/:status/:connectionReceiverId", userAuth, a
 
     } catch(err){
         console.error(`sendConnectionRequest failed : ${err.stack}`);
-        res.status(500).json({message:"Something went wrong"});
+        return res.status(500).json({message:"Something went wrong"});
     }
 });
 

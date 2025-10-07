@@ -16,7 +16,7 @@ authRouter.post("/signup", async (req, res)=> {
 
         const isExistingUser = await User.findOne({email:email});
         if (isExistingUser){
-            res.status(400).send({message:"User already exists"});
+            return res.status(400).json({message:"User already exists"});
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
@@ -34,9 +34,9 @@ authRouter.post("/signup", async (req, res)=> {
         });
 
         await user.save();
-        return res.status(201).send({message: "User signed up successfully"});
+        return res.status(201).json({message: "User signed up successfully"});
     } catch(err){
-        return res.status(500).send({message: "Error signing up user -> " + err.message});
+        return res.status(500).json({message: "Error signing up user -> " + err.message});
     }
 });
 
@@ -48,13 +48,13 @@ authRouter.post("/login", async (req, res) => {
         const {email, password} = req.body;
 
         if (!email || !password){
-            res.status(400).send({message:"Bad request"});
+            return res.status(400).json({message:"Bad request"});
         }
 
         // .select("+password") is need to here to fetch the password. As we restricted password in schema
         const user = await User.findOne({email:email}).select("+password"); 
         if (!user){
-            return res.status(401).send({message:"Invalid credentials"});
+            return res.status(401).json({message:"Invalid credentials"});
         }
         const isPasswordMatch = await user.isPasswordMatch(password);
         
@@ -73,12 +73,12 @@ authRouter.post("/login", async (req, res) => {
                     httpOnly: true, 
                     maxAge:10 * 60 * 60 * 1000
                 })
-                .send({message:"Login successfull"});
+                .json({message:"Login successfull"});
         } else{
-           return  res.status(401).send({message:"Invalid credentials"});
+           return  res.status(401).json({message:"Invalid credentials"});
         }
     } catch (err){
-        return res.status(500).send({message:"Something went wrong " + err});
+        return res.status(500).json({message:"Something went wrong " + err});
     }
 });
 
