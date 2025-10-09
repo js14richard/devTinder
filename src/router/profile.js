@@ -31,6 +31,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
     });
 
   } catch (err) {
+    console.error(err.stack);
     return res.status(500).json({
       success: false,
       message: "Internal server error. Please try again later."

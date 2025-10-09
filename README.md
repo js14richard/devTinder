@@ -22,4 +22,4 @@ o	app.use("/info", router); // → /info/about
 •	mongoose Schema -> pre(“save”) and internal methods
 •	mongoDb indexing -> left-prefix rule 
 •	ref and populate in mongodb [kind of joins in sql]
-•	skip() , limit() -> to build pagination
+•	skip() , limit() -> to build pagination 

@@ -31,6 +31,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res)=> {
 
 
     } catch(err){
+        console.error(err.stack);
         return res.status(500)
             .json({message:"Error while fetching the connection requests"});
     }

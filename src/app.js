@@ -36,7 +36,7 @@ connectToMongoDB()
         });
     })
     .catch((err)=>{
-        console.log("Error connecting to MongoDB", err);
+        console.log("Error connecting to MongoDB", err.message);
     }); 
 
 
