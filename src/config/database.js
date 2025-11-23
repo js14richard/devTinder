@@ -1,6 +1,9 @@
-
+require('dotenv').config();
 const mongoose = require("mongoose");
-const clusterUrl = "mongodb+srv://js14richard_db_user:x7KcX2ZFPZf216cj@richitech.ref1hdl.mongodb.net/devTinder";
+const clusterUrl = process.env.MONGODB_URI;
+if (!clusterUrl) {
+    throw new Error("MONGODB_URI is not configured in .env");
+}
 
 
 const connectToMongoDB = async ()=> {
@@ -8,7 +11,7 @@ const connectToMongoDB = async ()=> {
     try{
         await mongoose.connect(clusterUrl);
     } catch(err){
-        throw new Error("Error connecting to MongoDB cluster", err);
+        throw new Error("Error connecting to MongoDB cluster: " + err.message);
     }
 };
 
