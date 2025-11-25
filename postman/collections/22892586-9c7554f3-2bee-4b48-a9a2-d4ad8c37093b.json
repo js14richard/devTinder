@@ -1,0 +1,600 @@
+{
+	"info": {
+		"_postman_id": "22892586-9c7554f3-2bee-4b48-a9a2-d4ad8c37093b",
+		"name": "DevTinder",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "signup",
+			"id": "22892586-0478f559-7d7d-4f12-80ea-f0ef5cdfeade",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\":\"Richi\", \r\n    \"lastName\": \"Tech\", \r\n    \"email\":\"richi@tests.com\", \r\n    \"password\":\"richi@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/signup",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login",
+			"id": "22892586-e067ad43-73f8-4ade-af48-eea72a0c9bef",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"richi@tests.com\", \r\n    \"password\":\"richi@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/login",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user profile",
+			"id": "22892586-628787a5-e20c-4125-8924-508ee5d3ff8c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"richi@tests.com\", \r\n    \"password\":\"richi@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/profile/view",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"profile",
+						"view"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User Profile",
+			"id": "22892586-5921c369-6b52-4761-bd8a-ae28560301ce",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\":\"Richiiiiii\", \r\n    \"lastName\": \"Tech\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/profile/edit",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"profile",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forget password",
+			"id": "22892586-bc2c850c-e255-4753-a7b9-b6b79d5099d0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"currentPassword\":\"richi@123\", \r\n    \"newPassword\": \"richi@124\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/profile/password",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"profile",
+						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Logout",
+			"id": "22892586-1343c0ba-8fbc-4fe2-93a7-81790e37e7fa",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"richi@tests2.com\", \r\n    \"password\":\"richi@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/logout",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send connection request",
+			"id": "22892586-ebf216b1-83a0-4844-8620-a3f8a1207d2c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"richi@tests.com\", \r\n    \"password\":\"richi@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/send/request/:status/:connectionReceiverId",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"send",
+						"request",
+						":status",
+						":connectionReceiverId"
+					],
+					"variable": [
+						{
+							"key": "status",
+							"value": "ignored"
+						},
+						{
+							"key": "connectionReceiverId",
+							"value": "68d63cf49d4792261c7871ab"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Review connection request",
+			"id": "22892586-03e6c5b4-b447-46ad-9a02-c4c0ca89732c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"richi@tests.com\", \r\n    \"password\":\"richi@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/request/review/:status/:requestId",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"request",
+						"review",
+						":status",
+						":requestId"
+					],
+					"variable": [
+						{
+							"key": "status",
+							"value": "accepted"
+						},
+						{
+							"key": "requestId",
+							"value": "68df8cb0ba1be51668dcdda7"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List connection requests",
+			"id": "22892586-0dc53e01-d097-4a95-9d12-51211539e359",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"richi@tests.com\", \r\n    \"password\":\"richi@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/user/requests/received",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"requests",
+						"received"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List User connections",
+			"id": "22892586-e2b1b688-8a11-436c-8d76-540dccd6cc15",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"richi@tests.com\", \r\n    \"password\":\"richi@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/user/connections",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"connections"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Feed",
+			"id": "22892586-3f1dba75-c938-4305-bd7e-9632a6c64c33",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "user123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"richi@tests.com\", \r\n    \"password\":\"richi@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/feed",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"feed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by email",
+			"id": "22892586-0cdeba2e-bbab-46c2-b3b3-5c81c6947234",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"siril@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/user",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all users",
+			"id": "22892586-7dde27e1-fde8-4d3b-b156-eb6a99cb30b9",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/users",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User By ID",
+			"id": "22892586-11a8b883-8ec4-4b89-8f58-950dc7c12ade",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\" : \"68d39ae87a0fc35934b05aed\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/user",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user detail",
+			"id": "22892586-cb886404-9c19-421e-b6e3-25a5fa3fc552",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n    \"skills\":[\"React\", \"NodeJS\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/user/68d4fb1d7fccadcca5117428",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"68d4fb1d7fccadcca5117428"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
